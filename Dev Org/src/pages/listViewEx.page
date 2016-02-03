@@ -1,0 +1,27 @@
+<apex:page controller="NewCaseListController">
+<apex:pageBlock >
+<apex:pageBlockTable value="{!newCases}" var="nc" align="left" cellspacing="10px">
+
+<apex:column headerValue="Case Number">
+
+<apex:outputField value="{!nc.CaseNumber}"/>
+</apex:column>
+
+<apex:column headerValue="Subject" >
+
+<apex:outputField value="{!nc.Subject}"/>
+</apex:column>
+
+<apex:column headerValue="Priority" >
+
+<apex:outputField value="{!nc.Priority}"/>
+</apex:column>
+
+<apex:column headerValue="Action">
+
+<apex:outputLink value="{!URLFOR($Action.Case.View, nc.Id)}">View</apex:outputLink>
+</apex:column>
+
+</apex:pageBlockTable>
+</apex:pageBlock>
+</apex:page>

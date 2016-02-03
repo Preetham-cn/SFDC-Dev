@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Template-Page</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Template_Pages</value>
+    </caseValues>
+    <fields>
+        <label><!-- Display Name --></label>
+        <name>Display_Name__c</name>
+    </fields>
+    <fields>
+        <label><!-- Form --></label>
+        <name>Form__c</name>
+        <relationshipLabel><!-- Template_Pages --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Page --></label>
+        <name>Page__c</name>
+        <relationshipLabel><!-- Template_Pages --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Root --></label>
+        <name>Root__c</name>
+        <relationshipLabel><!-- Template_Pages --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Sort Order --></label>
+        <name>Sort_Order__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>In Progress</masterLabel>
+            <translation><!-- In Progress --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Not Started</masterLabel>
+            <translation><!-- Not Started --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Template --></label>
+        <name>Template__c</name>
+        <relationshipLabel><!-- Template_Pages --></relationshipLabel>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

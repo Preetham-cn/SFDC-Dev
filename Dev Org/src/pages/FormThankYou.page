@@ -1,0 +1,32 @@
+<!-- This page is display thank you message after user submits IG Form and redirects the user to Case -->
+<apex:page controller="FromThankYouController" docType="html-5.0" showHeader="false" sidebar="false">
+<apex:stylesheet value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery.mobile-1.4.2.min.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery-1.9.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery.mobile-1.4.2.min.js')}"/>
+
+<style>
+.visaBtn {
+    background-color: #F7B600 !important;
+    color:White !important;
+
+}
+
+
+</style>
+
+<body >
+
+
+<apex:form >
+<apex:image style="float:right;" value="{!URLFOR($Resource.MIGImages,'VISA_Logo.png')}" width="150px" height="50px" />
+<apex:PageBlock >
+<apex:outputText style="color:#1A1F71;font-family:Palatino Linotype;font-size:16px;" value="Thank You for subitting the request." />
+<apex:pageBlockButtons location="bottom">
+
+<apex:commandLink styleClass="ui-btn ui-mini  ui-btn-inline  ui-icon-arrow-r  ui-btn-icon-left visaBtn" value="Go to Case" action="{!gotoAccount}" />
+</apex:pageBlockButtons>
+
+</apex:PageBlock>
+</apex:form>
+</body>
+</apex:page>

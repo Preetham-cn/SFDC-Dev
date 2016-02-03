@@ -1,0 +1,44 @@
+<apex:page controller="accountListTreeController" showHeader="false" sidebar="false">
+
+<apex:stylesheet value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery.mobile-1.4.2.min.css')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery-1.9.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery.mobile-1.4.2.min.js')}"/> 
+
+<body>
+    <apex:pageblock >
+     <div data-role="collapsible">
+      <h1>Click me - I'm collapsible!</h1>
+      <p>I'm the expanded content.</p>
+     </div>
+            <ul>
+        <apex:repeat value="{!accounts}" var="account">
+            <li>
+             
+             Account:   {!account.Name} &nbsp;&nbsp;&nbsp;
+             Phone:     {!account.Phone}
+             
+                <ul>
+                <apex:repeat value="{!account.children}" var="opportunity">
+                    <li>
+                    Opportunity   ==> {!opportunity.Name}
+
+                        <ul>
+                        <apex:repeat value="{!opportunity.children}" var="contact">
+                            <li>
+                       Contact  ==>  {!contact.Name}
+                            </li>
+                        </apex:repeat>
+                        </ul>
+                    </li>
+                    <br/><br/>
+
+                </apex:repeat>
+              </ul>
+            </li>
+            <br/><br/>
+
+        </apex:repeat>
+        </ul>
+    </apex:pageblock>
+    </body>
+</apex:page>

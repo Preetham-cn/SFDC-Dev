@@ -1,0 +1,37 @@
+<apex:page showHeader="false" sidebar="false">
+  <html>
+    <body>
+        <!-- live chat button -->
+    <a id="liveagent_button_online_57390000000TPlY" href="javascript://Chat" style="float:right;display: block;" onclick="liveagent.startChat('57390000000TPlY')">
+            Online Chat
+        </a>
+        <div id="liveagent_button_offline_57390000000TPlY" style="display: none;">
+            Offline Chat
+        </div>
+
+        <script type="text/javascript">
+            if (!window._laq) { window._laq = []; }
+            window._laq.push(
+                function(){
+                    liveagent.showWhenOnline(
+                        '57390000000TPlY', 
+                        document.getElementById('liveagent_button_online_57390000000TPlY')
+                    );
+                    liveagent.showWhenOffline(
+                        '57390000000TPlY', 
+                        document.getElementById('liveagent_button_offline_57390000000TPlY')
+                    );
+                }
+            );
+        </script>
+
+        
+        <!-- live agent deployment -->
+        <script type='text/javascript' src='https://c.la1t1.salesforceliveagent.com/content/g/deployment.js'></script>
+        <script type='text/javascript'>
+            liveagent.init('https://d.la1t1.salesforceliveagent.com/chat', '57290000000TPhw', '00D90000000ivO3');
+        </script>
+    </body>
+</html>
+
+</apex:page>

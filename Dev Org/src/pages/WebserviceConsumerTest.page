@@ -1,0 +1,44 @@
+<apex:page controller="SoapGetAccListCls">
+    
+   <script>
+   function afterSearch(){
+            var attachBtn = document.getElementById('{!$Component.formid.Buttonid}');
+            attachBtn.disabled = false;
+            attachBtn.value = 'Please Wait....';        
+   }
+   </script>
+    
+  <apex:form id="formid">
+  
+  <!-- <apex:outputtext >{!sessonid1}</apex:outputtext> --><br/>
+  
+  <apex:pageBlock title="Account Search List From Root Org."  id="pgbkid">
+ <apex:inputText value="{!search}"></apex:inputText>
+    <apex:commandButton value="Search" action="{!accListMethod}"  reRender="formid" id="Buttonid"></apex:commandButton>
+    <apex:actionStatus id="searchstatus" onstart="afterSearch();" onstop="Get AccList From Root"/>
+  
+     <apex:pageBlockSection >
+     <apex:pageBlockTable id="searchTable" value="{!accList}" var="ac">                                   
+                    <apex:column value="{!ac.Name}" headerValue="Root Account Name" /> 
+                    <apex:column value="{!ac.Id}" headerValue="Root Account Id" />  
+                    <apex:column value="{!ac.phone}" headerValue="Root Account Pnone Number" />       
+                </apex:pageBlockTable>
+             
+     </apex:pageBlockSection>
+ </apex:pageBlock>
+ <!--
+  <apex:pageBlock title="Account List From Root Org."  id="pgbkid2">
+         <apex:actionStatus id="searchstatus" onstart="afterSearch();" onstop="Get AccList From Root"/>
+  
+     <apex:pageBlockSection >
+     <apex:pageBlockTable id="searchTable" value="{!accList2}" var="ac">                                   
+                    <apex:column value="{!ac.Name}" headerValue="Root Account Name" /> 
+                    <apex:column value="{!ac.Id}" headerValue="Root Account Id" />  
+                    <apex:column value="{!ac.phone}" headerValue="Root Account Pnone Number" />       
+                </apex:pageBlockTable>
+             
+     </apex:pageBlockSection>
+ </apex:pageBlock>
+ -->
+  </apex:form>
+</apex:page>

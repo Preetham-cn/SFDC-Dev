@@ -1,0 +1,318 @@
+<apex:page id="migpg" controller="QuestionBuilder" docType="html-5.0" showHeader="false" sidebar="false">
+<apex:stylesheet value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery.mobile-1.4.2.min.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery-1.9.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery.mobile-1.4.2.min.js')}"/>
+
+
+
+
+<head>
+ 
+ <script  type="text/javascript">
+    
+   var j$ = jQuery.noConflict();
+   j$(document).ready(function() {
+  
+          
+  });
+ </script>
+<style>
+
+.ui-bar-a
+    {
+            background:#F7B600 !important;
+            color:White !important;
+    }
+    
+      .ui-bar-b
+    {
+            background:#1A1F71 !important;
+            color:White !important;
+    }
+            
+        
+.custom-navbar ul li a {
+    background: White !important; 
+    color:#1A1F71 !important;
+    
+       
+}
+
+.custom-navbar ul li a.ui-btn-active {
+    background:#1A1F71 !important;
+    color: White!important;      
+    border-bottom-left-radius:50px 50px; 
+  
+}    
+
+.visaBtn {
+    background-color: #F7B600 !important;
+    color:White !important;
+
+}
+
+.visaBtnBlue {
+    background-color: #1A1F71 !important;
+    color:White !important;
+    border-color:White !important;
+
+}
+
+.mytab {
+    width: 16% !important;  /* 12.5% for 8 tabs wide */
+    clear: none !important; /* Prevent line break caused by ui-block-a */
+    
+}
+
+hr { 
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 2px;    
+    color:#F7B600 !important;
+}
+
+.acol .ui-collapsible-heading-collapsed > .ui-collapsible-heading-toggle {
+       background:#F7B600 !important;
+       color:White !important;
+
+
+}
+.acol .ui-collapsible-heading-toggle {
+       background:#F7B600 !important;
+       color:White !important;
+
+}  
+
+.bPageBlock .detailList tr td.data2Col, 
+        .bPageBlock .detailList tr td.labelCol
+        {
+            border-bottom:0px ;
+
+        }
+        
+.styled-select {
+  background: transparent;
+   width: 400px;
+   margin: 0;
+   padding: 0 0 0 0;
+   font-size: 16px;
+   line-height: 1;
+   border: 0;
+
+   border-radius: 0;
+   float:right;
+   height: 34px;
+   -webkit-appearance: none;
+  
+   }
+    
+</style>
+
+</head>
+<body>
+
+
+  <apex:form id="frm">
+         
+  <div data-role="page" id="page1" data-mini="true">
+
+     
+      
+
+    <div data-role="tabs" >
+
+      <div data-role="navbar"  id="mynavbar" class="custom-navbar"  data-iconpos="top" >
+
+        <ul >
+        <apex:repeat value="{!pages}" var="page">
+
+          
+            <li class="mytab" id="#{!page.junctionId}"><a href="#{!page.id}" class="{!page.className}" data-icon="{!page.iconName}" >{!page.name}</a></li> 
+          
+          </apex:repeat>
+        </ul>
+
+      </div>
+      
+    <!--  <div data-role="content">
+       <apex:pageMessages id="showmsg" showDetail="false" ></apex:pageMessages>
+      </div> -->
+      
+     
+     <apex:repeat value="{!pages}" var="pg">
+      <div id="{!pg.id}">
+
+       <apex:pageMessages id="showmsg" showDetail="false" ></apex:pageMessages>
+       
+       <apex:repeat value="{!pg.children}" var="section">                                
+        <div data-role="collapsible" style="width:75%;" data-mini="true" class="acol"  data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-collapsed="false"> 
+         <h1> {!section.Name}  </h1> 
+<!--         <a href="/servlet/servlet.FileDownload?file=00P25000000ao1f" styleClass="ui-btn ui-mini  ui-btn-inline  ui-icon-arrow-d  ui-btn-icon-left visaBtnBlue"  download="Bday">Download</a>   -->
+          <apex:outputLink value="{!URLFOR($Action.Attachment.Download, '00P25000000ao1f')}" style="float:right;" styleClass="ui-btn ui-mini  ui-btn-inline  ui-icon-arrow-d  ui-btn-icon-left visaBtnBlue"  target="_blank">Download</apex:outputLink> 
+         <div data-role="main" style="width:75%;" data-mini="true" class="ui-content" data-theme="b">
+         <apex:pageblock mode="maindetail" id="pgblck">
+           
+            <apex:pageblockSection columns="1" collapsible="false" showHeader="false">
+
+             <apex:repeat value="{!section.children}" var="question">
+          
+            <div class="ui-grid-a" style="width:55%;" data-mini="true">
+
+
+          <div class="ui-block-a" data-mini="true"> 
+           <apex:pageblockSectionItem dataStyle="width:10%;color:#1A1F71;font-family:Palatino Linotype;border-size:0px;" >
+            <apex:outputLabel style="display:inline-block;"  escape="false" value="{!answerMap[question.key].Question_Number__c}  {!questionMap[question.Id].Question_Text__c}">                          
+             &nbsp;<apex:image style="display:inline-block;margin-bottom:5px;"  alt="Help" styleClass="helpIcon" rendered="{!IF(questionMap[question.id].Help_Text__c!=null,true,false)}" title="{!questionMap[question.id].Help_Text__c}" value="/s.gif" />
+             &nbsp;<apex:outPutText value="*" style="color:red;display:inline-block;margin-top:3px;" rendered="{!answerMap[question.key].Required__c}"/>  
+             </apex:outputLabel>         
+             </apex:pageblockSectionItem>
+
+            <apex:pageblockSectionItem rendered="{!AND(answerMap[question.key].Type__c='Text',NOT(questionMap[question.id].Static__c))}">                                                 
+            <apex:inputText style="margin-left:12px;" value="{!answerMap[question.key].Text__c}" />            
+            </apex:pageblockSectionItem>
+            
+            <apex:pageblockSectionItem rendered="{!AND(answerMap[question.key].Type__c='Text',questionMap[question.id].Static__c)}">                                                             
+            <apex:outputText style="margin-left:12px;"  value="{!answerMap[question.key].Text__c}"/>          
+            </apex:pageblockSectionItem>
+             
+            <apex:pageblockSectionItem rendered="{!IF(answerMap[question.key].Type__c='Number',true,false)}">
+            <apex:inputField style="margin-left:12px;" value="{!answerMap[question.key].Numeric__c}"/>
+            </apex:pageblockSectionItem>
+            
+            <apex:pageblockSectionItem rendered="{!IF(answerMap[question.key].Type__c='Text Area',true,false)}">
+            <apex:inputTextarea style="width:600px;margin-left:12px;" cols="10" rows="5"   value="{!answerMap[question.key].Text_Area__c}"/>
+            </apex:pageblockSectionItem>      
+                  
+            <apex:pageblockSectionItem rendered="{!IF(answerMap[question.key].Type__c='Date',true,false)}">            
+            <apex:inputField style="margin-left:12px;" showDatePicker="true" value="{!answerMap[question.key].Date__c}"  />                   
+            </apex:pageblockSectionItem>
+            
+            <apex:pageblockSectionItem rendered="{!IF(answerMap[question.key].Type__c='Email',true,false)}">            
+            <apex:inputField style="margin-left:12px;" value="{!answerMap[question.key].Email__c}"   />            
+            </apex:pageblockSectionItem>
+
+            
+            
+            <apex:pageblockSectionItem rendered="{!IF(answerMap[question.key].Type__c='Currency',true,false)}">            
+            <apex:inputField style="margin-left:12px;"  value="{!answerMap[question.key].Currency__c}"  >
+             
+             </apex:inputField> 
+            </apex:pageblockSectionItem>
+            
+            <apex:pageblockSectionItem rendered="{!IF(answerMap[question.key].Type__c='Single Check Box',true,false)}">            
+            <apex:inputField style="margin-left:12px;" value="{!answerMap[question.key].CheckBox__c}" >  
+           
+            </apex:inputField>            
+            </apex:pageblockSectionItem>
+            
+            
+
+            
+
+            <apex:pageblockSectionItem rendered="{!IF(answerMap[question.key].Type__c='Multi Check Box',true,false)}">            
+            <apex:selectCheckboxes style="margin-left:10px;"  layout="{!answerMap[question.key].Display_Direction__c}" value="{!SelectedOptsMap[question.key]}">
+            <apex:selectOptions value="{!optionsMap[question.id]}"/>            
+            </apex:selectCheckboxes>
+            </apex:pageblockSectionItem>
+            
+            <apex:outputPanel >             
+            <apex:PageBlockSectionItem rendered="{!IF(answerMap[question.key].Type__c='Radio',true,false)}" >
+            <apex:actionRegion >
+            <apex:selectRadio style="margin-left:10px;" layout="{!answerMap[question.key].Display_Direction__c}" value="{!answerMap[question.key].Text__c}" >                        
+            <apex:selectOptions value="{!optionsMap[question.Id]}" />           
+            <apex:actionSupport event="onchange"  reRender="shPnl" action="{!assignID}">  
+            <apex:param name="{!question.key}" assignTo="{!QID}" value="{!question.key}"/>          
+            </apex:actionSupport>            
+            </apex:selectRadio>           
+            </apex:actionRegion>         
+            </apex:PageBlockSectionItem>            
+            </apex:outputPanel>                     
+            
+            <apex:outputPanel rendered="{!IF(answerMap[question.key].Type__c='Table',true, false)}"  >                     
+              <apex:pageBlockTable style="margin-left:10px;"  value="{!ObjectList[question.Id]}" var="rec" >  
+                  <apex:detail inlineEdit="true"/> 
+                <apex:inlineEditSupport showOnEdit="updateButton"   event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+                <apex:column value="{!rec.Id}" rendered="{!IF(tablefields=null , true, false)}"/>  
+               <apex:repeat value="{!fieldsList[question.Id]}" var="FieldLabel">
+                <apex:column headerValue="{!$ObjectType[questionMap[question.Id].Source_Object__c].fields[FieldLabel].Label}"> 
+             <apex:outputField value="{!rec[FieldLabel]}"  />
+               </apex:column>    
+                </apex:repeat> 
+                 
+            </apex:pageBlockTable>
+
+            
+              <apex:commandLink rendered="{!NOT(questionMap[question.Id].Static__c)}"   styleClass="ui-btn ui-mini  ui-btn-inline  ui-icon-forward  ui-btn-icon-left visaBtnBlue" reRender="pgblck" value="Update" id="updateButton" action="{!saveTable}">
+              <apex:param name="table" value="{!question.Id}" assignTo="{!tblQID}"/>
+              </apex:commandLink> 
+              
+            </apex:outputPanel>
+            
+            <apex:outputPanel >
+            <apex:pageblockSectionItem rendered="{!IF(answerMap[question.key].Type__c='Picklist' ,true,false)}">
+            <apex:actionRegion >
+            <apex:selectList style="margin-left:12px;" value="{!answerMap[question.key].Text__c}" size="1"  >          
+            <apex:selectOptions value="{!optionsMap[question.Id]}" />           
+            <apex:actionSupport event="onchange"  reRender="shPnl" action="{!assignID}"> 
+            <apex:param name="{!question.key}" assignTo="{!QID}" value="{!question.key}"/>
+            </apex:actionSupport>            
+            </apex:selectList>           
+             </apex:actionRegion>          
+            </apex:pageblockSectionItem>            
+            </apex:outputPanel>                                                                 
+                                          
+            <apex:pageblockSectionItem rendered="{!IF(questionMap[question.id].Note__c!=null, true, false)}" >
+            <apex:outputLabel style="float:left;"  value="{!questionMap[question.id].Note__c}"  escape="false"/>
+            </apex:pageblockSectionItem>    
+                                                            
+            <hr/>   
+
+          </div>
+          
+          </div>
+         </apex:repeat>
+         </apex:pageblockSection> 
+              
+          </apex:pageblock>
+        
+         </div>
+         </div>
+          
+         </apex:repeat> 
+              
+      <apex:commandLink style="float:right;padding-left: 30px;" reRender="showmsg" styleClass="ui-btn ui-mini ui-btn-inline  ui-icon-action  ui-btn-icon-left visaBtn" value="Save" id="saveButton" action="{!save}" >               
+          <apex:param name="pageId" value="{!pg.Id}" assignTo="{!pageIdQ}"/>
+      </apex:CommandLink>
+      
+      <apex:outputLink value="/apex/ReviewPage?reviewId={!pg.junctionId}" styleClass="ui-btn ui-mini ui-btn-inline  ui-icon-bars  ui-btn-icon-left visaBtn" target="_blank">
+                     Review
+      </apex:outputLink> 
+      
+       <apex:commandLink style="float:right;margin-right:10px;" styleClass="ui-btn ui-mini ui-btn-inline  ui-icon-star  ui-btn-icon-left visaBtn"  value="Mark as Complete" id="markButton"  action="{!markComplete}" >
+       <apex:param name="pageId" value="{!pg.Id}" assignTo="{!pageIdQ}"/>
+      </apex:CommandLink>
+      </div>
+
+    </apex:repeat>    
+    
+    </div>
+
+      <div data-role="footer" class="ui-bar-b" data-position="fixed">
+     <apex:commandLink style="float:left;" styleClass="ui-btn ui-mini ui-btn-inline  ui-icon-delete  ui-btn-icon-left visaBtnBlue" value="Cancel" action="{!save}"  >     
+     <apex:param name="cancel" value="delete" assignTo="{!icon}"/>
+     </apex:CommandLink>
+     <apex:commandLink style="float:right;" rendered="{!formComplete}"   styleClass="ui-btn ui-mini ui-btn-inline  ui-icon-check  ui-btn-icon-left visaBtnBlue" value="Submit" id="submitButton" action="{!submit}"   /> 
+  
+
+        </div>
+        </div>
+  
+  </apex:form>
+
+
+  </body>
+   </apex:page>

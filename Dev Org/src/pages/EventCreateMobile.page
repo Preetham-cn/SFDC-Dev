@@ -1,0 +1,773 @@
+<apex:page docType="html-5.0" showHeader="false" sidebar="false" controller="EventCreateMobileController">
+
+<apex:stylesheet value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery.mobile-1.4.2.min.css')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery-1.9.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery.mobile-1.4.2.min.js')}"/> 
+
+
+
+
+<head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+           
+        <style>
+        
+        h1 img 
+        {
+        float:left;
+        margin:0 5px 0 0;
+        display:inline;
+        }
+        .loader
+        {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: 99999;
+            text-align:center;
+            overflow: auto;
+        }  
+       
+     .ui-table-columntoggle-btn {
+       display: none !important;
+       }
+        
+       @media all and (max-width: 1000px) {
+       .ui-block-a, 
+       .ui-block-b, 
+       .ui-block-c,
+       .ui-block-d,
+       .ui-block-e { 
+           width: 100% !important; 
+           float:none !important; 
+       }
+   }    
+   
+   
+      
+        tr
+        {
+        border-bottom: 1px solid gray;
+        
+        }
+
+        td
+        {
+        
+        border-bottom: 1px solid gray;
+        border: 1px solid gray;
+        }
+
+        th
+        {
+        
+        background-color: lightblue;
+        
+        }
+        
+        .ui-bar-f
+        {
+            color:white;
+            background-color:#00aaee;
+        }
+
+       </style>
+       
+
+
+
+
+       <script type="text/javascript">
+               
+       var $j = jQuery.noConflict();        
+       var html;
+       var contctlist;
+       var contids = [];
+       var prodids = [];
+       var details = [];
+       var prods =  [];
+        
+         var prodchanged;
+         var prodname;
+         var state; 
+         
+        
+        
+        //Loader function loads the image while saving the data. This is restrict the users not to make any changes while the data is getting saved. uiLock locks the screen and uiUnlock - unlocks the screen
+        function loader(state, action)
+                {
+                if(state == "undefined") {
+                state = "show";
+                    }
+    
+                if(state == "show" && action=="save")
+                {
+                    $j.mobile.loading( "show", { textVisible: true, theme: 'd',
+                    html: "<div style='margin: 0 auto;text-align: center;'><img width='64px' height='64px' src='{!URLFOR($Resource.jQuerymob_1_4_2,'ajax.GIF')}' alt='Saving...' /><br/><h2>Saving</h2></div>"
+                    });
+                    uiLock();
+                }
+                else if (state == "show" && action=="load")
+                {
+                $j.mobile.loading( "show", { textVisible: true, theme: 'd',
+                    html: "<div style='margin: 0 auto;text-align: center;'><img width='64px' height='64px' src='{!URLFOR($Resource.jQuerymob_1_4_2,'ajax.GIF')}' alt='Loading...' /><br/><h2>Loading</h2></div>"
+                    });
+                    uiLock();
+                
+                }
+                else
+                {
+                    $j.mobile.loading( "hide");
+                    uiUnlock();
+                }
+            
+            }
+       
+              
+          
+ 
+        function uiLock (){
+                if($j('#uiLockId').length == 0)
+                  {
+            $j('<div></div>').css({
+                'position': 'fixed',
+                'top': 0,
+                'left': 0,
+                'z-index': 5000,
+                'opacity': 0.35,
+                'width': '100%',
+                'height': '100%',
+                'color':'white',
+                'background-color':'black'
+            }).attr('id', 'uiLockId').appendTo('body');
+            }
+            else
+            return;
+            } 
+    
+            function uiUnlock(){
+            $j('#uiLockId').remove();
+            }  
+         
+    
+    
+         
+         
+         
+         var requiredPop = true;
+         
+         // Validate method validates if any required field on details section are blank and if no contacts are added to contacts table.
+         function validate() {
+         
+         if( $j('#Subject :selected').text()=='' ||  $j('#Subject :selected').text()== null 
+         
+         || $j('#Status__c :selected').text() =='' || $j('#Status__c :selected').text() == null 
+         
+         ||  $j('#start').val() == '' || $j('#start').val() == null 
+         
+         ||  $j('#end').val() == '' || $j('#end').val() == null 
+         
+         ||  $j('#starttime').val() == '' || $j('#starttime').val() == null 
+         
+         ||  $j('#endtime').val() == '' || $j('#endtime').val() == null 
+        
+         || (contids.length < 1)) {
+         
+         requiredPop = false
+         
+         
+         
+         }
+         
+         
+         }
+         
+         // this method sends the data to controller to save the record. 
+        function saveRecord()
+        {
+            details = [];
+            prods =  [];
+            var startdatetime;   
+            var enddatetime;   
+            $j('#save').on('click', function (e) { 
+            
+        
+           //validation will happen before save.
+         
+                requiredPop = true;
+                validate(); 
+                
+                startdatetime = $j('#start').val();        
+                startdatetime = startdatetime+' '+ $j('#starttime').val();
+               
+                   
+                enddatetime = $j('#end').val();
+                enddatetime = enddatetime + ' '+ $j('#endtime').val();
+                
+                
+                
+                
+                
+                
+                if(requiredPop) {
+                
+                  if(startdatetime > enddatetime) {
+                
+                 $j('#strtGreater').popup( "open", {positionTo: '#start'} )
+                
+                } else {
+                   // var productsDiscussed = [];  // array of objects discussed
+                  //  var $headers = $j("#results th");
+                   // var $rows = $j("#results tbody tr").each(function(index) { // for each row in the 'product' results table
+                     //   $cells = $j(this).find("td"); // find all cells within that row
+                     //   productsDiscussed [index] = {}; 
+                      //  $cells.each(function(cellIndex) {
+                       //     cellIndex = (cellIndex == 0)?1:cellIndex; // ignore the first coloumn - delete button
+                      //      productsDiscussed[index][$j($headers[cellIndex]).html()] = $cells[cellIndex].innerHTML; // create a key-value map using the table TH fields
+                       // });
+                    //});
+                    
+                    loader("show","save");                   
+                   // productsDiscussedJSON = JSON.stringify(productsDiscussed);
+                   
+                     
+                     details.push(JSON.stringify($j("select.Event, input.Event, textarea.Event").serializeArray()) ); 
+                     //prods.push(productsDiscussedJSON);
+                    
+                    
+                   
+                    Visualforce.remoting.Manager.invokeAction('EventCreateMobileController.saveEvent', details, contids, function(result, event){
+                        if (event.status && result ) {                                    
+                           
+                            
+                             loader("hide","save");
+                             $j('#eventCreated').popup( "open"); 
+                            
+                           
+                             
+                        } 
+                        else if (event.type === 'exception') {
+                            $j('#eventNotCreated').popup( "open"); 
+                            console.log(result);      
+                              
+                        } else {
+                        $j('#eventNotCreated').popup( "open");
+                        }
+                    },{escape: true});
+                    
+                }
+                
+                } 
+                else 
+                { 
+                    //alert('from false'+$j('#Subject :selected').text()+$j('#Status__c :selected').text()+$j('#start').val()+$j('#end').val()+contids.length);
+                    $j('#requiredPop').popup( "open");
+                }
+            });
+        
+       
+        }
+        
+       // selectProducts method adds Products to the dropdown based on users sub-region. 
+       
+       
+       // popup method shows up a popup  if user tries to select materials before product is selected
+               
+      
+      
+      // This method gets invoked whenever a product gets changed. It gets new set of Materials each time product is changed.
+      
+        
+        
+       // This method is called during the page load. It fills up all dropdown fields when page is loaded except Product and Material
+        
+       function selectDropdowns(field) {
+       
+       
+                        
+         var obj = $j('#'+field).attr('class');
+        
+         
+         $j('#'+field).prepend("<option value='' selected='selected'></option>");
+          loader("show", "load");   
+       Visualforce.remoting.Manager.invokeAction('EventCreateMobileController.getPicklistValues', obj, field,
+                 function(result, event){
+                 
+                     if (event.status) {                                         
+                      if($j('#'+field+ '> option').length < (result.length)){
+                      $j.each(result, function (i, item){
+                        $j('#'+field).append($j('<option>', { 
+            value: item.value,
+            text: result[i]
+      
+            }));
+            
+        });
+               
+               $j("#Subject").val("Call");
+               $j("#Status__c").val("Completed");
+               $j("#Type").val("Meeting");
+               $j('#'+field).selectmenu("refresh", true); 
+                              
+       
+              loader("hide", "load");       
+          
+           }             
+                        
+                     } else if (event.type === 'exception') {
+                         //exception case code  
+                         console.log(result);        
+                     } else {                   
+                     
+                     }
+                 }, 
+                 {escape: true}
+              );                  
+        
+        }
+        
+         // This method get contacts based on user input in the search field. Contact and Account is shown in the list from which user can select.
+         
+         function selectContacts() {
+        $j("#contactList").on("input", function(e) {
+       
+         var text = $j(this).val(); 
+         var contactAccount;
+         var html;
+         var cnt = true;
+         var len = $j(this).val().length;                     
+          
+         
+       if(len > 2) {
+       Visualforce.remoting.Manager.invokeAction('EventCreateMobileController.searchContacts',text,
+                 function(result, event){
+                 
+                 $j('#cList').listview('refresh'); 
+                 
+                     if (event.status) {
+                  
+                     
+                     $j('#cList').html("");
+                     $j.each(result, function (i, item){
+                     
+                     contactAccount = (typeof(result[i].Account) == 'undefined') ? "" : result[i].Account.Name;
+                       
+                          var newLi = $j('<li></li>');
+                          
+                          var newLink = $j('<a id="' +this.Id+ '" >' +result[i].Name+'<br/>'+contactAccount+ '</a>');
+                        
+                        
+                        newLink.click(function(e) {
+                       
+                       if(contids.length > 9) { 
+                       
+                       
+                      $j('#limtExceed').popup( "open");
+                       }
+                       else {
+                        var contupdated = true;
+                         e.preventDefault();
+                         
+                         var thisid = this.id;
+                        $j.each(contids, function(i) {
+                       
+                        if(contids[i] == thisid)
+                        { 
+                      
+                        contupdated = false;
+                        }
+                        
+                        
+                        });
+                       
+                        
+         if(contupdated) {
+         contids.push(this.id); 
+            
+           var test =  "<td ><input type='button' value='X' class='ui-btn ui-btn-b ui-mini ui-icon-delete' id=";
+           test = test +"'"+ this.id +"' "+ "/></td>\n" ;
+            
+         contctlist = '';
+         contctlist = contctlist + "<tr>\n";    
+         
+         contctlist = contctlist + test;  
+         contctlist = contctlist + "<td>" + result[i].Name+ "</td>\n";
+         
+         contctlist = contctlist + "</tr>\n\n";
+
+        $j('#listcont > tbody').append(contctlist);
+        $j('#listcont').table('refresh');
+        $j('#listcont').show();
+            }           
+                 
+                 }
+                 
+                       
+                    });
+                        
+                       newLi.append(newLink);
+                      
+                       $j('#cList').append(newLi);
+                      });
+                      
+                      
+                      
+                      
+                      $j('#cList').listview('refresh'); 
+                      $j('#cList').trigger('updatelayout');
+                      
+                        
+           }             
+                      else if (event.type === 'exception') {
+                        
+                         console.log(result); 
+                         alert('There was error fetching data');       
+                     } else {                   
+                     
+                     }
+                    
+                 }, 
+                 {escape: true}
+              );                  
+        }
+        else if(len < 3)
+        {
+        $j('#cList').html("");
+        $j('#cList').listview('refresh'); 
+        $j('#cList').trigger('updatelayout');
+        }
+        
+        
+        
+        });
+         
+     
+         
+       }
+     
+     // This method is to clear input values from contact search when X is clicked on on contact search input field    
+    function clear()
+    {
+    
+    $j('a.ui-input-clear').click(function () {
+              
+              $j('#contactList').closest('input').val('');
+              $j('#contactList').closest('input').trigger('keyup');
+              $j('#cList').html("");
+              $j('#cList').listview('refresh'); 
+              $j('#cList').trigger('updatelayout');
+});   
+}
+
+
+// This method is to delete products from table
+
+    
+      
+      // This method is to remove contacts from contacts table upon clicking X
+      
+      function deleteContacts() {
+
+    $j('#listcont').on('click', 'input[type="button"]', function(e){
+    contids.splice( $j.inArray(this.id, contids), 1 );
+
+    $j(this).closest('tr').remove();
+    
+   
+       })
+      }
+
+    $j(document).ready(function() {
+       
+        var today = new Date();   
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+
+        var yyyy = today.getFullYear(); 
+        
+        if(mm < 10)
+        {
+        mm = '0' + mm;
+        }
+        var dat = yyyy+'-'+mm+'-'+dd;   
+
+        $j('#start').val(dat); 
+        $j('#end').val(dat);      
+        
+        
+            
+       
+       $j('#mainscreen').on('pagebeforeshow', function (event, data) {
+        $j('#calltrack')[0].reset();
+         $j('#listcont > tbody').html("");
+         
+         contids = [];
+         prodids = [];
+         details = [];
+         prods =  [];
+         $j('#listcont').hide();
+         
+         
+        $j("#Subject").val("Call");
+         $j("#Status__c").val("Completed");
+         $j("#Type").val("Meeting");
+        
+       $j('#start').val(dat); 
+        $j('#end').val(dat);     
+    
+});
+       
+       
+       
+               
+              
+               
+               
+              
+             
+               $j('select').each(function(index,element){
+               
+               
+               
+               selectDropdowns($j(this).attr('id'));
+               
+               
+              
+               
+               });
+                
+              
+              
+               selectContacts();
+               clear();
+               
+               deleteContacts();
+               saveRecord();
+               $j('#listcont').hide();
+              
+                $j('#results').hide();
+                
+                
+             
+                
+                
+          });
+
+
+
+
+
+       </script>
+       </head>
+        <body>
+
+        <form id="calltrack" >
+        
+        
+       
+
+
+        <div data-role="page" id="homescreen">
+          <div class="search-header" data-role="header" data-theme="f" data-position="fixed">
+            <a href="#mainscreen" id= "cancel" data-transition="flow" class="ui-btn  ui-btn-inline ui-mini ui-shadow ui-icon-delete  ui-btn-icon-left">Cancel</a>
+             
+             <h1>Call Tracking Events</h1>
+       <a href="#" id="save" class="ui-btn ui-btn-b ui-btn-inline ui-mini ui-shadow ui-icon-check  ui-btn-icon-left">Save</a>   
+          </div>
+          
+          
+          <div data-role="popup" id="eventNotCreated" class="ui-content" data-history="false" data-dismissible="false">
+      
+
+      <div data-role="main" class="ui-content">
+        <p><font color="red">Unable to Create Call Tracking Event ! Please try again.</font></p>
+        <a href="#mainscreen" data-transition="slidefade" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-back ui-btn-icon-left" >Back</a>
+      </div>
+
+      
+    </div>
+          
+          <div data-role="popup" id="eventCreated" class="ui-content" data-history="false" data-dismissible="false">
+      
+
+      <div data-role="main" class="ui-content">
+        <p><font color="red">Call Tracking Event Created Successfully</font></p>
+        <a href="#mainscreen" data-transition="slidedown" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-back ui-btn-icon-left" >OK</a>
+      </div>
+
+      
+    </div>
+          
+          <div data-role="main" class="ui-content">
+          
+                    
+          
+          <div data-role="collapsible" data-collapsed="false" >
+          <h1>Details</h1>
+
+          <div class="ui-grid-a">
+          <div data-role="popup" id="requiredPop" class="ui-content" data-history="false">
+      <a href="#" data-rel="back" data-position-to="window" class="ui-btn ui-btn-b ui-corner-all ui-shadow ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+      <p><font color="red">Please Fill Required Fields !</font><br/> <br/><font color="red" size="2">(*) indicates required</font></p>
+      
+    </div>
+
+     <div class="ui-block-a">
+      <div class="ui-field-contain" id="subjt" >
+        <label for="Subject"><font color="red">* </font>Subject</label>
+        <select name="Subject" id="Subject" class="Event">
+        
+        </select> 
+       </div> 
+        
+            
+
+
+       
+       <div  class="ui-field-contain">
+         <label for="start"><font color="red">* </font>Start Date</label>
+ 
+                <input name="start" id="start" type="date" class="Event"  data-role="datebox" data-options='{"mode": "datebox", "useDialogForceFalse": true, "noAnimation": true, "defaultValue": "[2013,1,1]" }'/>     
+                
+        </div>
+        
+        <div class="ui-field-contain">
+        <label for="starttime"><font color="red">* </font>Start Time</label>
+        <input name="starttime" id="starttime" type="time" data-role="datebox" class="Event" data-options='{"mode": "timebox", "useNewStyle":true,"useFocus": true,"overrideTimeFormat": 24}'/>
+       </div>
+       
+       <div data-role="popup" id="strtGreater" class="ui-content" data-history="false">
+      <a href="#" data-rel="back" class="ui-btn ui-btn-b ui-corner-all ui-shadow ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+      <p><font color="red">Start Date/Time Cannot be After End Date/Time !</font></p>      
+     </div>
+     
+     <div  class="ui-field-contain">
+         <label for="end"><font color="red">* </font>End Date</label>
+                <input type="date" id="end" name="end" class="Event" />       
+                </div>
+
+
+        <div class="ui-field-contain">
+        <label for="endtime"><font color="red">* </font>End Time</label>
+        <input name="endtime" id="endtime" type="time" class="Event" data-role="datebox" data-options='{"mode": "timebox", "useNewStyle":true,"useFocus": true,"overrideTimeFormat": 24}'/>
+       </div>
+
+             
+
+    </div>
+
+
+    <div class="ui-block-b">           
+       <div class="ui-field-contain" id="stat" >
+        <label for="status">&nbsp;&nbsp;<font color="red">* </font>Status</label>
+        <select name="status" id="Status__c" class="Event">
+        
+        </select>              
+       </div>
+       
+       <div class="ui-field-contain" id="typ1" >
+        <label for="type">&nbsp;&nbsp;&nbsp;&nbsp;Type</label>
+        <select name="type" id="Type" class="Event">
+        
+        </select>              
+       </div>
+
+        <div class="ui-field-contain" id="subtyp" >
+        <label for="subtype">&nbsp;&nbsp;&nbsp;&nbsp;Subtype</label>
+        <select name="subtype" id="Sub_Type__c" class="Event">
+        
+        </select>              
+       </div>
+
+       <div  class="ui-field-contain" >
+        <label for="Description">&nbsp;&nbsp;&nbsp;&nbsp;Comments</label>
+        <textarea name="Description" id="Description" class="Event"></textarea>
+      </div> 
+
+
+     </div>  
+       
+
+     </div>
+
+
+
+      </div>
+  </div>
+
+<div data-role="main" class="ui-content">
+  <div data-role="collapsible" data-collapsed="false">
+    <h1>Attendees</h1>
+   <div class="ui-grid-a">
+
+  
+            <div data-role="content" id="contList" > 
+            <label for="contactList"><font color="red">* </font>Contacts</label>
+           <input type="search" id="contactList" placeholder="Search Contacts (type at least 3 chars)" class="contacts"/>
+            <ul id="cList" data-role="listview"  data-inset="true"  data-dividertheme="c" data-autodividers="true" data-filter-reveal="true"></ul>
+             
+               <br/> 
+    
+           
+</div>
+
+<div data-role="popup" id="limtExceed" class="ui-content" data-history="false">
+      <a href="#" data-rel="back" data-position-to="window" class="ui-btn ui-btn-b ui-corner-all ui-shadow ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+      <p><font color="red">Limit Exceeded !</font><br/> <br/><font color="red" size="2">Max Contacts:10, Max Product Details:10</font></p>
+      
+    </div>
+
+<div >
+
+&nbsp;&nbsp;<table data-role="table" id="listcont" data-mode="columntoggle" class="ui-responsive ui-shadow" >
+                  <thead>
+                    <tr>
+                      <th>Del</th>
+                      <th>Contact</th>         
+                      
+          
+                    </tr>
+                  </thead>
+              <tbody>
+              </tbody>
+
+      </table>
+</div>
+  
+   </div>
+
+
+  </div> 
+ </div>
+
+
+  
+  <div class="loader">
+<center>
+<img width="64px" height="64px" src="{!URLFOR($Resource.jQuerymob_1_4_2,'ajax.GIF')}" />
+<br/><h2>Saving</h2>    
+</center>
+</div> 
+  
+</div>
+<div data-role="page" id="mainscreen">
+        
+        <div data-role="header" id="mainheader" data-theme="f">
+        
+       
+        <h1 align="center"><font color="white">Event Home</font></h1>
+      
+        </div>
+       <br/><br/>
+       
+       <div align="center" class="ui-field-contain" >
+       <a href="#homescreen" data-transition="slide"  class="ui-btn ui-btn-b ui-btn-inline ui-mini ui-shadow ui-icon-plus  ui-btn-icon-left" id="newcallevent">New Call Tracking Event</a>
+         
+          </div>  
+          </div>
+          
+
+</form>
+</body>
+</apex:page>

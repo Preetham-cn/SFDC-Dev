@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Location_Details</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Location Details</shortDescription>
+        <value>Geographical Location</value>
+    </labels>
+    <labels>
+        <fullName>Page15DigitID</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page15DigitID</shortDescription>
+        <value>00N9000000EP0Fp</value>
+    </labels>
+    <labels>
+        <fullName>Section15DigitID</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Section15DigitID</shortDescription>
+        <value>00N9000000EP0GE</value>
+    </labels>
+    <labels>
+        <fullName>Template15DigitID</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template15DigitID</shortDescription>
+        <value>00N9000000EP0Fa</value>
+    </labels>
+    <labels>
+        <fullName>ThankYouMessage</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ThankYouMessage</shortDescription>
+        <value>Thank you for your request.</value>
+    </labels>
+</CustomLabels>

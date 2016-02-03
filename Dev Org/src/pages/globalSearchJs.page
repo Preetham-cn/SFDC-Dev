@@ -1,0 +1,19 @@
+<apex:page showHeader="true">
+<script type="text/javascript">
+function showData(txt)
+     {
+      var ex = document.getElementById(txt).value;
+      var url = '/_ui/search/ui/UnifiedSearchResults?str='+ex;
+      alert(url);
+      //window.open(url); 
+      window.top.location =url;
+
+      
+     }
+</script>     
+<apex:form >
+<apex:inputText style="-webkit-border-radius:10px;"  title="Search" id="srchtxt"/>
+
+<apex:commandButton id="srch" value="Search.." onclick="showData('{!$Component.srchtxt}');"/>
+</apex:form>
+</apex:page>

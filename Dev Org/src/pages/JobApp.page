@@ -1,0 +1,14 @@
+<apex:page standardController="Candidate__c"><!-- extensions can be used to add new functionality to existings standard controller -->
+ 
+  <!-- Begin Default Content REMOVE THIS -->
+  <!--
+  <apex:form>
+  
+  </apex:form>
+  
+  -->
+  <h1>Welcome</h1>
+ <br/> <br/>
+ Job Postings : Soon to be posted
+   <!-- End Default Content REMOVE THIS -->
+</apex:page>

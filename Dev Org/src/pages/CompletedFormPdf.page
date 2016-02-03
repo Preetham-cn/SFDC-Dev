@@ -1,0 +1,274 @@
+<!--  This VF Page is used to render the completed pdf document after user submits the IG. It renders the Questions and Answers -->
+
+<apex:page controller="QuestionBuilder"   renderAs="pdf" applyBodyTag="false" >
+<apex:stylesheet value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery.mobile-1.4.2.min.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery-1.9.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery.mobile-1.4.2.min.js')}"/>
+
+<head>
+<style type="text/css" media="print">
+
+@page {
+size: A4;
+
+margin-left: 0;
+margin-right:0;
+  
+border-bottom-style:solid;
+
+@bottom-center {
+color:#808080;
+content: element(footer);
+}
+    
+@bottom-right{
+color:#808080;
+padding-right : 30px;
+content: "Page " counter(page) " of " counter(pages);font-size: 10px;
+}    
+
+@bottom-left {
+color:#808080;
+padding-left:30px;
+content: "Visa Europe Confidential";font-size: 10px;
+}
+
+@top {
+content: element(header1);
+}
+
+}
+
+li.TOC a::after {
+  content: leader('.') target-counter(attr(href), page);
+}
+
+br {
+   display: block;
+   margin: 2px 0;
+   line-height:5px;
+}
+
+h1
+{
+
+string-set: doctitle content();
+}
+
+h2   
+{
+
+font-size: 14pt;
+text-align: left;
+bookmark-level: 1;
+text-transform: uppercase;
+background:#F7B600 !important;
+color:~0E2044 !important; 
+}
+ 
+div.header1 {
+               padding: 10px;
+               position: running(header1);
+               }
+ 
+div.footer { 
+                display: block; 
+                padding: 5px;
+                position: running(footer);  
+                text-align: center;
+                color:#808080;
+    }
+    
+
+h3
+{
+ 
+ page-break-before: avoid;
+ page-break-inside: avoid;
+ background:#0E2044 !important;
+ color:#F7B600 !important;
+ font-size: 12pt;
+ font-family:Courier New;
+ bookmark-level: 2;
+
+}
+    
+.extendfull
+{
+
+    float: left;
+    width: 100%;
+    margin-left: -50px;
+    padding-left: 50px;
+    margin-right: -50px;
+    padding-right: 50px;
+}
+
+.bPageBlock .detailList tr td.data2Col, 
+.bPageBlock .detailList tr td.labelCol
+
+  {
+    border-bottom:0px ;
+  }
+        
+body {
+    overflow: hidden;
+    }  
+
+    
+</style>
+
+</head>
+
+
+<body>
+
+       
+     <div class="footer" style="font-size:10px;">        
+         <apex:outputLabel style="font-size:10px;">
+          {!templateInfo[0].Header__c}
+         
+         </apex:outputLabel>
+          
+    </div>
+        
+     <div style="page-break-after:always">
+    <!--  <apex:outputText style="font-size:10pt;font-family:Palatino Linotype;" value="Case Number: {!caseInfo.CaseNumber}"/>
+      <apex:outputText style="float:right;font-size:10pt;font-family:Palatino Linotype;" value="Owner: {!caseInfo.Owner.Name}" title="Owner"/> 
+      <br/>      
+       <apex:outputText style="font-size:10pt;font-family:Palatino Linotype;" value="Subject: {!caseInfo.Subject}"/>
+       <apex:OutputText style="float:right;font-size:10pt;font-family:Palatino Linotype;" value="Created Date:{0,date,dd/MM/yyyy}" >             
+        <apex:param value="{!caseInfo.CreatedDate}" />
+        </apex:outputText> -->
+       
+
+       <br/><br/><br/>
+      <apex:image style="float:right;" value="{!URLFOR($Resource.MIGImages,'VISA_Logo.png')}" width="150px" height="50px" />  
+       <br/><br/>
+                     
+         <apex:outputText style="float:left;font-size:12pt;font-family:Palatino Linotype;float:left;" value="{!templateInfo[0].Header__c}"/>
+         <h1 class="doctitle" style="width:100%;font-size:16pt;color:#0E2044;background:#F7B600;font-family:Palatino Linotype;float:left;">&nbsp;&nbsp;{!templateInfo[0].Name}</h1>                            
+         <apex:outputText style="float:left;display:block;font-family:Palatino Linotype;font-size:10pt;"  escape="false" value="{!templateInfo[0].Description__c}"/>
+
+        </div>
+                    
+      <apex:form id="frm">                                             
+         <apex:repeat value="{!pages}" var="pg" >
+          <div id="{!pg.id}"  data-line="{!pg.Name}" class="header" style="page-break-before:avoid">        
+        <apex:repeat value="{!pg.children}" var="section">                                
+        <div class="header" style="page-break-before:avoid"> 
+         
+         <h3 class="extendfull" style="text-indent: 25px;"> &nbsp;&nbsp;{!section.Name}  </h3> 
+            <br/>
+            <br/>
+            <br/>
+         <div data-role="main" data-mini="true" class="ui-content" data-theme="b" style="margin-left:30px;">
+
+
+           <apex:pageblock mode="maindetail">
+            <apex:pageblockSection columns="1" collapsible="false" showHeader="false">
+
+             <apex:repeat value="{!section.children}" var="question">
+          
+            <div class="ui-grid-a" data-mini="true">
+
+
+          <div class="ui-block-a" data-mini="true"> 
+                       
+            <apex:pageblockSectionItem dataStyle="color:#1A1F71;font-family:Palatino Linotype;font-size:12px;border-size:0px;" rendered="{!answerMap[question.key].Type__c!='Table'}" >
+            <apex:outputText style="float:left;display:block;"  escape="false" value="{!answerMap[question.key].Question_Number__c}  {!questionMap[question.Id].Question_Text__c}">
+           
+            </apex:outputText>
+            </apex:pageblockSectionItem>
+            <br/>
+            
+            <apex:pageblockSectionItem dataStyle="font-family:Palatino Linotype;font-size:12px;border-size:0px;"  rendered="{!IF(answerMap[question.key].Type__c='Text',true,false)}">
+             
+             <apex:outputText value="{!answerMap[question.key].Text__c}" />
+           </apex:pageblockSectionItem>
+             
+           <apex:pageblockSectionItem dataStyle="font-family:Palatino Linotype;font-size:12px;border-size:0px;"  rendered="{!IF(answerMap[question.key].Type__c='Numeric',true,false)}">
+           
+            <apex:outputText value="{!answerMap[question.key].Numeric__c}" />  
+            </apex:pageblockSectionItem>
+            
+            <apex:pageblockSectionItem dataStyle="font-family:Palatino Linotype;font-size:12px;border-size:0px;"  rendered="{!IF(answerMap[question.key].Type__c='Text Area',true,false)}">
+           
+            <apex:outputText value="{!answerMap[question.key].Text_Area__c}" /> 
+            </apex:pageblockSectionItem>
+            
+
+                        
+            <apex:pageblockSectionItem dataStyle="font-family:Palatino Linotype;font-size:12px;border-size:0px;"   rendered="{!IF(answerMap[question.key].Type__c='Date',true,false)}">            
+            
+             <apex:outputText value="{0,date,dd/MM/yyyy}">                
+               <apex:param value="{!answerMap[question.key].Date__c}" /> 
+             </apex:outputText>  
+            </apex:pageblockSectionItem>
+            
+            <apex:pageblockSectionItem dataStyle="font-family:Palatino Linotype;font-size:12px;border-size:0px;"  rendered="{!IF(answerMap[question.key].Type__c='Email',true,false)}">            
+           
+             <apex:outputText value="{!answerMap[question.key].Email__c}" />  
+            </apex:pageblockSectionItem>
+
+           
+            
+            <apex:pageblockSectionItem dataStyle="font-family:Palatino Linotype;font-size:12px;border-size:0px;"  rendered="{!IF(answerMap[question.key].Type__c='Currency',true,false)}">            
+            
+             <apex:outputText value="{!answerMap[question.key].Currency__c}" />    
+            </apex:pageblockSectionItem>
+            
+           
+            
+            <apex:pageblockSectionItem dataStyle="font-family:Palatino Linotype;font-size:12px;border-size:0px;"  rendered="{!IF(answerMap[question.key].Type__c='Single Select Check Box',true,false)}">            
+
+            <apex:outputText value="{!IF(answerMap[question.key].Check_Box__c,'Yes','No')}"  />   
+            </apex:pageblockSectionItem>
+
+            
+            <apex:pageblockSectionItem dataStyle="font-family:Palatino Linotype;font-size:12px;border-size:0px;"   rendered="{!IF(answerMap[question.key].Type__c='Multi Select Check Box',true,false)}">
+             <apex:outputText value="{!answerMap[question.key].Text__c}" />              
+            </apex:pageblockSectionItem>
+            
+
+            <apex:pageblockSectionItem dataStyle="font-family:Palatino Linotype;font-size:12px;border-size:0px;"   rendered="{!IF(answerMap[question.key].Type__c='Single Select Picklist',true,false)}">           
+                  <apex:outputText value="{!answerMap[question.key].Text__c}" />                   
+            </apex:pageBlockSectionItem>
+                                                       
+           <apex:pageblockSectionItem dataStyle="font-family:Palatino Linotype;font-size:12px;border-size:0px;"   rendered="{!IF(answerMap[question.key].Type__c='Single Select Radio' ,true,false)}">          
+                     <apex:outputText value="{!answerMap[question.key].Text__c}" />  
+            </apex:pageblockSectionItem>
+
+                      
+                       
+                                   
+            
+            <br/>
+
+
+          </div>
+          
+          </div>
+         </apex:repeat>
+         </apex:pageblockSection> 
+              
+          </apex:pageblock>
+        
+         </div>
+         </div>
+          
+         </apex:repeat>            
+             </div>
+
+    </apex:repeat>    
+    
+    
+     
+
+
+  </apex:form>
+   
+  </body>
+ 
+
+</apex:page>

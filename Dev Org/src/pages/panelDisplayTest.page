@@ -1,0 +1,37 @@
+<apex:page standardcontroller="case" extensions="panelDisplayTest" sidebar="false" showHeader="false">
+    <apex:form >
+        
+        <apex:pageblock id="pgblock">
+            
+            <apex:pageblocktable id="taskTable" width="100%" value="{!caseList}" var="t">
+               <apex:column >
+                    <apex:facet name="header">Case Number</apex:facet>
+                    <apex:outputField value="{!t.CaseNumber}"/>
+                </apex:column>    
+                
+                <apex:column >
+                    <apex:facet name="header">Compliance</apex:facet>
+                    <apex:commandLink immediate="true" action="{!check}" rerender="pnlBlock">Show
+                    <apex:param name="radioId" value="{!t.CaseNumber}"/></apex:commandLink>
+                </apex:column>       
+
+            </apex:pageblocktable>
+        </apex:pageblock>  
+
+        <apex:outputPanel id="pnlBlock">
+        <apex:pageblock id="cblock" rendered="{!showPanel}">  
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton action="{!save}"  value="Save"/>
+                
+            </apex:pageBlockButtons>
+            <apex:pageblocktable id="complaintTable" width="100%" value="{!caseList}" var="wc">
+                <apex:column style="width:15.5%">
+                    <apex:facet name="header">Project Service Compliance</apex:facet>
+                    <apex:outputField value="{!wc.Subject}"/>
+                </apex:column>
+                
+            </apex:pageblocktable>
+        </apex:pageblock>  
+        </apex:outputPanel> 
+    </apex:form>
+</apex:page>

@@ -1,0 +1,6 @@
+<apex:page standardController="Case">
+<h1><font color='ff0000'>Warning:{!$CurrentPage.parameters.tab}</font></h1>
+<apex:pageMessage severity="Warning"  summary="Hello" >
+<apex:outputText value="{!$CurrentPage.URL}"></apex:outputText>
+</apex:pageMessage>
+</apex:page>

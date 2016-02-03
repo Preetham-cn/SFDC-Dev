@@ -1,0 +1,136 @@
+<!-- This page is invoked by Manage Template button on Document Template object. This page display pages, sections and questions in tree structure -->
+<apex:page standardController="Template__c" extensions="ManageTemplateController" showHeader="false" sidebar="false">
+<apex:stylesheet value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery.mobile-1.4.2.min.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery-1.9.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jQuerymob_1_4_2, 'jquery.mobile-1.4.2.min.js')}"/>
+<head>
+<apex:outputPanel rendered="{!refreshPage}">
+   <script>
+      
+      function doRefresh()
+      {
+      //window.top.location='/apex/ManageTemplate?id={!recID}';
+      location.reload();
+      }
+   </script>
+</apex:outputPanel>
+
+
+
+<style>
+
+
+
+.acol .ui-collapsible-heading-collapsed > .ui-collapsible-heading-toggle {
+       background:#F7B600 !important;
+       color:White !important;
+
+}
+.acol .ui-collapsible-heading-toggle {
+       background:#F7B600 !important;
+       color:White !important;
+
+}
+
+.ui-bar-f
+        {
+            color:white;
+            background-color:#1A1F71;
+        }
+
+.visaBtn {
+    background-color: #F7B600 !important;
+    color:White !important;
+
+}
+
+.visaBtnBlue {
+    background-color: #1A1F71 !important;
+    color:White !important;
+
+}
+
+</style>
+</head>
+
+
+<apex:form >
+<body>
+
+ 
+
+
+    <div data-role="header" data-tap-toggle="false" data-theme="f" data-position="fixed">
+           
+            <apex:commandLink action="{!URLFOR($Action.Template__c.View,recID)}" value="Home" id="homeLink" styleClass="ui-btn ui-btn-inline ui-icon-home ui-btn-icon-left visaBtnBlue"/> 
+           
+            <!-- <a href="/a1o/e?" target="_blank" class="ui-btn  ui-btn-inline ui-mini ui-shadow ui-icon-plus  ui-btn-icon-left visaBtnBlue">Add Pag</a> -->
+           <h1>{!Template__c.Name}</h1>                       
+            
+            <apex:commandLink action="{!URLFOR($Action.Template__c.Manage_Template,recID)}" value="Refresh" id="refreshLink" styleClass="ui-btn ui-btn-inline ui-icon-back ui-btn-icon-left visaBtnBlue"/> 
+     </div>
+
+
+
+
+    <apex:pageblock id="miqblock">
+       <a href="/{!$ObjectType.Template_Page__c.keyPrefix}/e?CF{!$Label.Template15DigitID}={!Template__c.Name}&{!$Label.Template15DigitID}_lkid={!recID}&RecordType={!tempPagRecType}" target="_blank" class="ui-btn  ui-btn-inline ui-mini ui-shadow ui-icon-plus  ui-btn-icon-left visaBtnBlue">Add Page</a>
+        <br/><br/>
+        <ul>
+        <apex:repeat value="{!pages}" var="page">
+           
+            <div data-role="collapsible" class="acol" style="width:75%"> 
+             <h1>{!page.DisplayName}</h1>
+             
+                <div data-role="main" class="ui-content" >
+                        <a href="/{!$ObjectType.Page_Section__c.keyPrefix}/e?CF{!$Label.Page15DigitID}={!page.Name}&{!$Label.Page15DigitID}_lkid={!page.Id}&RecordType={!pageSecRecType}" target="_blank" class="ui-btn  ui-btn-inline ui-mini ui-shadow ui-icon-plus  ui-btn-icon-left visaBtnBlue">Add Section</a>
+                        <apex:commandLink action="{!URLFOR($Action.Template_Page__c.Delete, page.junctionId,[retURL=URLFOR($Action.Template__c.Manage_Template,recID)])}" value="Delete Page" id="theCommandLink0" styleClass="ui-btn ui-mini ui-btn-inline  ui-icon-delete  ui-btn-icon-right visaBtnBlue"/>
+                 </div>
+
+                 <p style="color:#1A1F71"><b>Sections</b></p><br/>
+                 
+                <ul>
+                <apex:repeat value="{!page.children}" var="section">
+                   
+                     
+                  <div data-role="collapsible"  style="width:90%" class="acol"> 
+                     <h2> {!section.DisplayName}</h2>
+                        
+                       <div data-role="main" class="ui-content" data-theme="e"  >
+                       <a href="/{!$ObjectType.Section_Question__c.keyPrefix}/e?CF{!$Label.Section15DigitID}={!section.DisplayName}&CF{!$Label.Section15DigitID}_lkid={!section.Id}&RecordType={!secQuesRecType}" target="_blank"  class="ui-btn  ui-btn-inline ui-mini ui-shadow ui-icon-plus  ui-btn-icon-left visaBtnBlue">Add Question</a>
+
+                    
+                        <apex:commandLink action="{!URLFOR($Action.Page_Section__c.Delete, section.junctionId,[retURL=URLFOR($Action.Template__c.Manage_Template,recID)])}"  value="Delete Section" id="theCommandLink1" styleClass="ui-btn ui-mini ui-btn-inline  ui-icon-delete  ui-btn-icon-right visaBtnBlue"/>
+                        </div>
+                        <p style="color:#1A1F71"><b>Questions</b></p><br/>
+                        <apex:repeat value="{!section.children}" var="question">
+                          <div class="ui-grid-a"  style="border:1px solid black;">
+                            <div class="ui-block-a" style="width:95%">
+                            <apex:outputText style="float:left;display:block;"  escape="false" value="{!question.DisplayName}"/>
+
+                              
+                          
+                        </div>
+                        
+                        <div class="ui-block-b" style="width:5%">
+                            
+                           <apex:commandLink action="{!URLFOR($Action.Section_Question__c.Delete, question.junctionId,[retURL=URLFOR($Action.Template__c.Manage_Template,recID)])}"  value="X" reRender="miqblock" id="theCommandLink2" styleClass="ui-btn ui-mini ui-btn-inline visaBtnBlue"/> 
+                           
+                        </div> 
+                        
+                        </div>
+                        </apex:repeat>
+                                          
+                    </div>                    
+                </apex:repeat>
+              </ul>
+             <br/><br/>
+        </div>
+
+        </apex:repeat>
+        </ul>
+        
+    </apex:pageblock> 
+    </body>
+    </apex:form>
+    </apex:page>

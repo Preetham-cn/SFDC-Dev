@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Employee ID Input</label>
+    <recordUpdates>
+        <name>Update_User_Record</name>
+        <label>Update User Record</label>
+        <locationX>263</locationX>
+        <locationY>267</locationY>
+        <connector>
+            <targetReference>Thank_You</targetReference>
+        </connector>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>LoginFlow_UserId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>EmployeeNumber</field>
+            <value>
+                <elementReference>Employee_ID</elementReference>
+            </value>
+        </inputAssignments>
+        <object>User</object>
+    </recordUpdates>
+    <screens>
+        <name>Get_Employee_ID</name>
+        <label>Get Employee ID</label>
+        <locationX>264</locationX>
+        <locationY>90</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <connector>
+            <targetReference>Update_User_Record</targetReference>
+        </connector>
+        <fields>
+            <name>Employee_ID</name>
+            <dataType>Number</dataType>
+            <fieldText>Employee ID</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>false</isRequired>
+            <scale>0</scale>
+        </fields>
+        <fields>
+            <name>EmployeeID</name>
+            <fieldText>{!UserInfo.Employee_ID__c}</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+    </screens>
+    <screens>
+        <name>Thank_You</name>
+        <label>Thank You</label>
+        <locationX>266</locationX>
+        <locationY>408</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <fields>
+            <name>Message</name>
+            <fieldText>Thank You for the update.</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+    </screens>
+    <startElementReference>Get_Employee_ID</startElementReference>
+    <variables>
+        <name>LoginFlow_UserId</name>
+        <dataType>String</dataType>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>UserInfo</name>
+        <dataType>SObject</dataType>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

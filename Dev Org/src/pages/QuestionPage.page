@@ -1,0 +1,98 @@
+<apex:page standardcontroller="Question__c"  extensions="QuestionController" sidebar="false" showHeader="false" >
+<apex:pageMessages id="pgmsgs" showDetail="false"></apex:pageMessages>
+<head>
+<script type="text/javascript">
+        function box() {
+            controllerMethod();
+        }        
+</script>
+
+<style>
+
+
+
+
+
+
+</style>
+</head>
+
+
+<apex:form >
+
+<apex:sectionHeader subtitle="Question Builder"/>
+    
+  <apex:pageBlock id="pbid1" >
+   
+
+   <apex:pageBlockSection title="Question Type Details" columns="1" >
+     <apex:inputField value="{!ques.Name}" required="true" />
+     <apex:inputField value="{!ques.Question_Text__c}" required="true"/> 
+     <apex:inputField value="{!ques.Help_Text__c}"/> 
+
+    <apex:pageblockSectionItem >
+     <apex:outputLabel value="{!$ObjectType.Question__c.fields.Question_Type__c.Label}"> </apex:outputLabel>
+     <apex:actionRegion >
+     <apex:inputField id="type"  value="{!ques.Question_Type__c}" onchange="box();" required="{!Mandatory}">
+     <apex:actionFunction name="controllerMethod" action="{!findQuestion}" reRender="pbsid1">
+    </apex:actionFunction>
+    </apex:inputField>
+   </apex:actionRegion>
+   </apex:pageblockSectionItem>
+    
+
+    
+
+   </apex:pageBlockSection>
+   
+   <apex:pageBlockSection title="Question Details" id="pbsid1" rendered="true" >       
+    <apex:pageblockSectionItem >
+    <apex:outputLabel value="Source Object" ></apex:outputLabel>
+    <apex:actionRegion >
+    
+    <apex:selectList value="{!ques.Source_Object__c}"  size="1" id="srcobj" >
+       <apex:selectOptions value="{!Objs}" />
+    <apex:actionSupport event="onchange" rerender="srcfields,tablefields" />
+    </apex:selectList>
+     </apex:actionRegion>
+     </apex:pageblockSectionItem>
+     
+     <apex:pageblockSectionItem rendered="{!IF(ques.Question_Type__c!='Table',true,false)}">
+     <apex:outputLabel value="Source Field" ></apex:outputLabel>
+     <apex:actionRegion >
+        <apex:selectList value="{!ques.Source_Field__c}" label="Source Field" size="1" id="srcfields">
+          <apex:selectOptions value="{!fields}" />
+       </apex:selectList>  
+    </apex:actionRegion>
+    </apex:pageblockSectionItem>
+    
+    <apex:pageblockSectionItem rendered="{!IF(ques.Question_Type__c='Table',true,false)}">
+     <apex:outputLabel value="Table Fields" ></apex:outputLabel>
+     <apex:actionRegion >
+        <apex:selectList value="{!ques.Table_Fields__c}" multiselect="true" label="Table Field" size="6" id="tablefields">
+          <apex:selectOptions value="{!fields}" />
+       </apex:selectList>  
+    </apex:actionRegion>
+    </apex:pageblockSectionItem>
+
+        
+    <apex:inputField style="width:260px" value="{!ques.List_of_Options__c}" rendered="{!OR(ques.Question_Type__c='Multi Check Box',ques.Question_Type__c='Radio', ques.Question_Type__c='Single Select Picklist', ques.Question_Type__c='Multi Select Picklist')}" >
+    <apex:image alt="Help" styleClass="helpIcon" title="Please provide semi-colon(;) separated options" value="/s.gif" style="float:right;padding-right:15px" />
+    </apex:inputField>        
+    <apex:inputField value="{!ques.Display__c}" rendered="{!IF(ques.Question_Type__c='Multi Check Box' || ques.Question_Type__c='Radio' ,true,false)}" />      
+    <apex:inputField value="{!ques.Static__c}" rendered="{!OR(ques.Question_Type__c='Table',ques.Question_Type__c='Text')}" />
+    <apex:inputField value="{!ques.All_Records__c}" rendered="{!IF(ques.Question_Type__c='Single Select Picklist'||ques.Question_Type__c='Multi Select Picklist', true, false)}"/>                                
+    </apex:pageBlockSection>      
+   <apex:pageBlockSection title="Comments Details" id="pbsid2" rendered="true" columns="1" >
+   <apex:inputField value="{!ques.Note__c}"  />
+
+   </apex:pageBlockSection> 
+   <div align="center" draggable="false" >
+    <apex:commandButton value="Save"  action="{!SaveMethod}"/> 
+    <apex:commandButton value="Cancel" action="{!Cancel}"/> 
+
+   </div> 
+  </apex:pageBlock>
+  
+ </apex:form>   
+</apex:page>

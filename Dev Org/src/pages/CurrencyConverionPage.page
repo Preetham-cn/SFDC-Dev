@@ -1,0 +1,14 @@
+<apex:page controller="CurrencyConversionController">  
+<apex:form >
+<apex:PageBlock >
+  <apex:commandButton action="{!hello}" value="Convert Now" /> <br /><br />
+
+  Currency From :<apex:inputText required="true" value="{!currencyFrom}"/><br />
+
+   Currency To &nbsp; &nbsp;:<apex:inputText required="true" value="{!currencyTo}"/><br /><br />
+
+  Current Exchange rate is  --->  <apex:OutputText value="{!message}"/>
+
+  </apex:PageBlock>
+  </apex:form>
+</apex:page>

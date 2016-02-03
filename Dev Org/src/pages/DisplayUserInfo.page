@@ -1,0 +1,8 @@
+<apex:page language="">
+<apex:PageBlock >
+<apex:pageBlockSection >
+Hello {! $User.FirstName} {!$User.LastName} , {!$Label.ThankYouMessage}
+
+</apex:pageBlockSection>
+</apex:PageBlock>
+</apex:page>

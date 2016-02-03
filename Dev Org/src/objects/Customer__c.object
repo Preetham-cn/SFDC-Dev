@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>Wow</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Email_ID__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Enter your email address</inlineHelpText>
+        <label>Email ID</label>
+        <required>false</required>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <label>Cust</label>
+</CustomObject>
