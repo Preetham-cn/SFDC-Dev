@@ -103,6 +103,10 @@
         <name>CustomPageWebLink</name>
     </types>
     <types>
+        <members>*</members>
+        <name>CustomSite</name>
+    </types>
+    <types>
         <members>Recruiting_Dashboard</members>
         <members>Recruiting_Dashboard/My_Dashboard</members>
         <members>Salesforce_Adoption_Dashboards</members>
